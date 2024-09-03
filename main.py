@@ -14,10 +14,10 @@ while not game._gameOver:
     userX = Buscaminas.setCoord("Introduce una coordenada X: ")
     userY = Buscaminas.setCoord("Introduce una coordenada Y: ")
 
-    game.userChoices.append([userX, userY])
+    game.userChoices.append([userY, userX])
 
     if not game.isInitialized:
-        game.minas = (userX, userY)
+        game.minas = (userY, userX)
         game.matriz = game.matriz
 
     game.matriz = game.matriz

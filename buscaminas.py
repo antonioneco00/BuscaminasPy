@@ -19,7 +19,8 @@ class Buscaminas:
     @matriz.setter
     def matriz(self, value):
         unknownCells = 0
-        msg = f"Has seleccionado las coordenadas {self.userChoices[len(self.userChoices) - 1]}. Continua la partida"
+        lastChoice = self.userChoices[len(self.userChoices) - 1]
+        msg = f"Has seleccionado las coordenadas [{lastChoice[1]}, {lastChoice[0]}]. Continua la partida"
 
         for i in range(len(self._matriz)):
             for j in range(len(self._matriz[0])):
@@ -52,7 +53,7 @@ class Buscaminas:
 
     @minas.setter
     def minas(self, userChoice):
-        userX, userY = userChoice
+        userY, userX = userChoice
 
         for i in range(len(self._minas)):
             while True:
@@ -68,14 +69,13 @@ class Buscaminas:
     @staticmethod
     def setCoord(message):
         while True:
-            choice = int(input(message))
+            choice = input(message)
 
-            if choice >= 0 and choice < 5:
+            if choice.isdigit() and int(choice) >= 0 and int(choice) < 5:
                 break
-        return int(choice)
 
-    def isMina(self, x, y):
-        return [x, y] in self._minas
+            print("Por favor, introduzca coordenadas entre 0 y 4 (ambos incluidos)")
+        return int(choice)
 
     def printScheme(self, msg):
         print()
