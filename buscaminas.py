@@ -5,9 +5,10 @@ init()
 
 
 class Buscaminas:
-    def __init__(self, matriz, minas, isInitialized, gameOver, userChoices):
+    def __init__(self, matriz, minas, GAMESIZE, isInitialized, gameOver, userChoices):
         self._matriz = matriz
         self._minas = minas
+        self._GAMESIZE = GAMESIZE
         self.isInitialized = isInitialized
         self._gameOver = gameOver
         self.userChoices = userChoices
@@ -22,15 +23,15 @@ class Buscaminas:
         lastChoice = self.userChoices[len(self.userChoices) - 1]
         msg = f"Has seleccionado las coordenadas [{lastChoice[1]}, {lastChoice[0]}]. Continua la partida"
 
-        for i in range(len(self._matriz)):
-            for j in range(len(self._matriz[0])):
+        for i in range(self._GAMESIZE):
+            for j in range(self._GAMESIZE):
                 self._matriz[i][j] = self.nearbyMinas(i, j)
 
                 if self.isUnknownCell(i, j) and [i, j] not in self.userChoices:
                     self._matriz[i][j] = f"{Fore.LIGHTBLACK_EX}?{Fore.RESET}"
                     unknownCells += 1
 
-        if unknownCells == 3:
+        if unknownCells == len(self._minas):
             self._gameOver = True
 
             msg = "Enhorabuena! Has ganado 🎉"
@@ -57,7 +58,7 @@ class Buscaminas:
 
         for i in range(len(self._minas)):
             while True:
-                newMina = [random.randint(0, 4), random.randint(0, 4)]
+                newMina = [random.randint(0, self._GAMESIZE - 1), random.randint(0, self._GAMESIZE - 1)]
 
                 if newMina not in self._minas and newMina != [userY, userX]:
                     self._minas[i] = newMina
@@ -66,15 +67,14 @@ class Buscaminas:
                 else:
                     print("La mina se repite o coincide con el usuario")
 
-    @staticmethod
-    def setCoord(message):
+    def setCoord(self, message):
         while True:
             choice = input(message)
 
-            if choice.isdigit() and int(choice) >= 0 and int(choice) < 5:
+            if choice.isdigit() and int(choice) >= 0 and int(choice) < self._GAMESIZE:
                 break
 
-            print("Por favor, introduzca coordenadas entre 0 y 4 (ambos incluidos)")
+            print(f"Por favor, introduzca coordenadas entre 0 y {self._GAMESIZE - 1} (ambos incluidos)")
         return int(choice)
 
     def printScheme(self, msg):
@@ -117,7 +117,7 @@ class Buscaminas:
 
         for i in range(x - 1, x + 2):
             for j in range(y - 1, y + 2):
-                if i >= 0 and j >= 0 and i < 5 and j < 5:
+                if i >= 0 and j >= 0 and i < self._GAMESIZE and j < self._GAMESIZE:
                     if self.matriz[i][j] == 0:
                         isUnknown = False
 
